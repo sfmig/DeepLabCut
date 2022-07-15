@@ -122,7 +122,7 @@ list_data_augm_type_to_pop.remove('general')
 map_iter_to_data_augm_excl_case = dict()
 for k, pop_el in enumerate(list_data_augm_type_to_pop):
 
-    ## Treat each case as a different iteration (hack)--100,200,300  -------
+    ## Treat each case as a different iteration (hack)--100,200,300  ---
     iter_data_augm = (k+1)*100
     print('--------------------------------------------------')
     print('Data augm excl iter: {}'.format(iter_data_augm))
