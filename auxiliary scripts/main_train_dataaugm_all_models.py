@@ -30,6 +30,7 @@ config_path = '/Users/user/Desktop/sabris-mouse/sabris-mouse-nirel-2022-07-06/co
 # Other params
 NUM_SHUFFLES=1
 SHUFFLE_ID=1
+TRAINING_SET_INDEX=0 # default
 MAX_SNAPSHOTS=3
 DISPLAY_ITERS=1 # display loss every N iters; one iter processes one batch
 SAVE_ITERS=1 # save snapshots every n iters
@@ -186,7 +187,7 @@ for i,daug_str in enumerate(list_of_data_augm_models_strs):
     one_train_pose_config_file_path,\
         _, _ = deeplabcut.return_train_network_path(config_path,
                                                     shuffle=SHUFFLE_ID, 
-                                                    trainingsetindex=0, # default
+                                                    trainingsetindex=TRAINING_SET_INDEX, # default
                                                     modelprefix=model_prefix) 
     
     os.makedirs(str(os.path.dirname(one_train_pose_config_file_path))) # create parentdir 'train'
@@ -232,6 +233,7 @@ for i,daug_str in enumerate(list_of_data_augm_models_strs):
     ## Train model
     deeplabcut.train_network(config_path, # config.yaml, common to all models
                             shuffle=SHUFFLE_ID,
+                            trainingsetindex=TRAINING_SET_INDEX,
                             max_snapshots_to_keep=MAX_SNAPSHOTS,
                             displayiters=DISPLAY_ITERS,
                             maxiters=MAX_ITERS,
