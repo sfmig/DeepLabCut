@@ -25,11 +25,11 @@ from deeplabcut.generate_training_dataset.trainingsetmanipulation import create_
 ##########################################################
 ### Set config path of project with labelled data
 # (we assume create_training_dataset has already been run)
-config_path = '/Users/user/Desktop/sabris-mouse/sabris-mouse-nirel-2022-07-06/config.yaml' #'/media/data/stinkbugs-DLC-2022-07-15/config.yaml'
+config_path = '/media/data/stinkbugs-DLC-2022-07-15/config.yaml'
 
 # Other params
-NUM_SHUFFLES=1
-SHUFFLE_ID=1
+NUM_SHUFFLES=3
+#SHUFFLE_ID=1
 TRAINING_SET_INDEX=0 # default
 MAX_SNAPSHOTS=3
 DISPLAY_ITERS=1 # display loss every N iters; one iter processes one batch
@@ -162,7 +162,7 @@ for ky in baseline.keys() :
 
 #########################################
 ## Loop to train each model
-list_gpus_to_use = list(range(N_GPUS))
+#list_gpus_to_use = list(range(N_GPUS))
 
 for i,daug_str in enumerate(list_of_data_augm_models_strs):
 
@@ -184,15 +184,17 @@ for i,daug_str in enumerate(list_of_data_augm_models_strs):
 
     ###########################################################
     # Copy base train pose config file to the directory of this augmentation method
-    one_train_pose_config_file_path,\
-        _, _ = deeplabcut.return_train_network_path(config_path,
-                                                    shuffle=SHUFFLE_ID, 
-                                                    trainingsetindex=TRAINING_SET_INDEX, # default
-                                                    modelprefix=model_prefix) 
-    
-    os.makedirs(str(os.path.dirname(one_train_pose_config_file_path))) # create parentdir 'train'
-    shutil.copyfile(base_train_pose_config_file_path, 
-                    one_train_pose_config_file_path) #copy base train config file
+    for sh in range(NUM_SHUFFLES):
+        one_train_pose_config_file_path,\
+            _, _ = deeplabcut.return_train_network_path(config_path,
+                                                        shuffle=sh, 
+                                                        trainingsetindex=TRAINING_SET_INDEX, # default
+                                                        modelprefix=model_prefix) 
+        
+        os.makedirs(str(os.path.dirname(one_train_pose_config_file_path))) # create parentdir 'train'
+        shutil.copyfile(base_train_pose_config_file_path, 
+                        one_train_pose_config_file_path) #copy base train config file
+
 
     #####################################################
     # Create dict with the data augm params for this model
@@ -230,14 +232,14 @@ for i,daug_str in enumerate(list_of_data_augm_models_strs):
     #---should this be aug_project_path? or the parentdir to config.yaml (i.e. project_path)? bc it is copied from parent dir, it is already set to project_path
 
     #########################################
-    ## Train model
-    deeplabcut.train_network(config_path, # config.yaml, common to all models
-                            shuffle=SHUFFLE_ID,
-                            trainingsetindex=TRAINING_SET_INDEX,
-                            max_snapshots_to_keep=MAX_SNAPSHOTS,
-                            displayiters=DISPLAY_ITERS,
-                            maxiters=MAX_ITERS,
-                            saveiters=SAVE_ITERS,
-                            gputouse=list_gpus_to_use[i],
-                            allow_growth=True,
-                            modelprefix=model_prefix)
+    # ## Train model
+    # deeplabcut.train_network(config_path, # config.yaml, common to all models
+    #                         shuffle=SHUFFLE_ID,
+    #                         trainingsetindex=TRAINING_SET_INDEX,
+    #                         max_snapshots_to_keep=MAX_SNAPSHOTS,
+    #                         displayiters=DISPLAY_ITERS,
+    #                         maxiters=MAX_ITERS,
+    #                         saveiters=SAVE_ITERS,
+    #                         gputouse=list_gpus_to_use[i],
+    #                         allow_growth=True,
+    #                         modelprefix=model_prefix)
